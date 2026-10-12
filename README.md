@@ -70,7 +70,6 @@ scripts/db.sh start         # later runs just start it
 # 4. Apply migrations and load seed data (event, tickets, promos, demo users)
 npm run db:migrate
 npm run db:seed
-
 # 5. Run the client and API together
 npm run dev
 #    client → http://localhost:5173
@@ -86,11 +85,39 @@ Useful scripts (run from the repository root):
 | `npm run dev:server` | Run the API only                         |
 | `npm run build`      | Type-check and build both workspaces     |
 | `npm run typecheck`  | Type-check both workspaces               |
+| `npm test`           | Run the server test suite (unit + DB)    |
 | `npm run db:generate`| Generate a Drizzle migration from schema |
 | `npm run db:migrate` | Apply pending migrations                 |
-| `npm run db:seed`    | Seed the event, promos and demo accounts  |
+| `npm run db:seed`    | Seed demo event, promos and demo accounts |
+| `npm run db:bootstrap-admin` | Create/promote a real admin (no demo data) |
 | `scripts/db.sh psql` | Open a psql shell on the local database  |
 | `scripts/db.sh reset`| Delete and recreate the local cluster    |
+
+### Testing
+
+The server suite runs with [Vitest](https://vitest.dev):
+
+```bash
+npm test                          # unit + integration tests, once
+npm --workspace server run test:watch
+```
+
+Unit tests (pricing, CSV export, tokens) need no database. The integration
+suite exercises the real booking lifecycle — create → fulfil → refund, webhook
+idempotency and concurrent oversell protection — against PostgreSQL. It uses a
+dedicated `african_vibes_test` database and truncates it between tests, so it
+never touches development data. Set `TEST_DATABASE_URL` to point it elsewhere
+(CI does this). If the database is unreachable the integration tests skip
+themselves and the unit tests still pass.
+
+```bash
+# one-off: create the local test database, then the suite migrates it itself
+createdb -h 127.0.0.1 -p 5433 african_vibes_test
+```
+
+Continuous integration (`.github/workflows/ci.yml`) runs type-checking (app and
+tests), the full build and the test suite against a throwaway Postgres service on
+every push and pull request.
 
 ---
 
@@ -250,8 +277,8 @@ needed to hand the client a public URL:
    `CLIENT_ORIGIN` are derived from Render's `RENDER_EXTERNAL_URL`, so the
    default `*.onrender.com` domain needs no extra wiring.
 4. (Optional) Seed demo data from the service **Shell**:
-   `SEED_DEMO_ACCOUNTS=true npm run db:seed` — this creates the demo event,
-   promos and the admin/customer accounts even in production.
+   `SEED_DEMO_EVENT=true SEED_DEMO_ACCOUNTS=true npm run db:seed` — this creates
+   the demo event, promos and the admin/customer accounts even in production.
 
 ### Preparing the client review
 
@@ -296,6 +323,27 @@ it is exposed directly), serves `client/dist` with immutable caching for hashed
 assets and a no-cache `index.html`, and returns the SPA shell for client-side
 routes while `/api/*` and `/uploads/*` stay on the API. Set `SERVE_CLIENT=false`
 to keep the client on a separate host (then CORS uses `CLIENT_ORIGIN`).
+
+### Going live without demo data
+
+A real launch starts from an empty database — no demo event or accounts:
+
+```bash
+npm run db:migrate                              # create the schema (tables only)
+
+ADMIN_EMAIL=you@yourdomain.com \
+ADMIN_PASSWORD='a-strong-password' \
+npm run db:bootstrap-admin                      # create/promote the first admin
+```
+
+Then sign in at `/admin` and create your real events, ticket types and promos
+through the dashboard; customers book against that data like any other. The
+seed script's demo content is production-guarded: `npm run db:seed` only writes
+the demo event/promos in production when `SEED_DEMO_EVENT=true` (and demo
+accounts when `SEED_DEMO_ACCOUNTS=true`) are set. `db:bootstrap-admin` never
+touches demo content — if the account already exists it is promoted to admin
+with its email marked verified; set `ADMIN_RESET_PASSWORD=true` to also reset its
+password, or add `ADMIN_FIRST_NAME` / `ADMIN_LAST_NAME` when creating a new one.
 
 ---
 

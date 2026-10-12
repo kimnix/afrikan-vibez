@@ -14,9 +14,11 @@
     "build": "npm --workspace server run build && npm --workspace client run build",
     "start": "npm --workspace server run start",
     "typecheck": "npm --workspace server run typecheck && npm --workspace client run typecheck",
+    "test": "npm --workspace server run test",
     "db:generate": "npm --workspace server run db:generate",
     "db:migrate": "npm --workspace server run db:migrate",
-    "db:seed": "npm --workspace server run db:seed"
+    "db:seed": "npm --workspace server run db:seed",
+    "db:bootstrap-admin": "npm --workspace server run db:bootstrap-admin"
   },
   "devDependencies": {
     "concurrently": "^10.0.6"

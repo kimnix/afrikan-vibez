@@ -5,6 +5,7 @@ import {
   findEventBySlug as findSeedEventBySlug,
   promos as seedPromos,
 } from '../domain/eventSeed.js'
+import { env } from '../env.js'
 import type {
   EventDetail,
   EventStatus,
@@ -13,6 +14,7 @@ import type {
   TicketType,
 } from '../domain/types.js'
 import { db } from './client.js'
+import { DatabaseUnavailableError } from './users.repo.js'
 import {
   events as eventsTable,
   promos as promosTable,
@@ -23,16 +25,25 @@ import {
 } from './schema.js'
 
 /**
- * Run a database query, falling back to seed data when the database is not
- * configured or the query fails, so the API is always available in development.
+ * Run a database query.
+ *
+ * In development we fall back to the bundled seed data when the database is not
+ * configured or a query fails, so the UI is always renderable offline. In
+ * production there is no fallback: a missing database or failed query throws, and
+ * an empty result is returned as-is, so real outages surface instead of silently
+ * serving demo content.
  */
 async function safe<T>(query: () => Promise<T>, fallback: () => T): Promise<T> {
-  if (!db) return fallback()
+  if (!db) {
+    if (env.isProd) throw new DatabaseUnavailableError()
+    return fallback()
+  }
   try {
     const result = await query()
-    if (Array.isArray(result) && result.length === 0) return fallback()
+    if (!env.isProd && Array.isArray(result) && result.length === 0) return fallback()
     return result
   } catch (err) {
+    if (env.isProd) throw err
     console.error('[db] query failed, using seed fallback:', (err as Error).message)
     return fallback()
   }
@@ -124,16 +135,20 @@ export async function listEvents(): Promise<EventDetail[]> {
 
 export async function getEventBySlug(slug: string): Promise<EventDetail | undefined> {
   const fromSeed = () => findSeedEventBySlug(slug)
-  if (!db) return fromSeed()
+  if (!db) {
+    if (env.isProd) throw new DatabaseUnavailableError()
+    return fromSeed()
+  }
   try {
     const [row] = await db
       .select()
       .from(eventsTable)
       .where(eq(eventsTable.slug, slug))
       .limit(1)
-    if (!row) return fromSeed()
+    if (!row) return env.isProd ? undefined : fromSeed()
     return toEventDetail(row, await loadTicketTypes(row.id))
   } catch (err) {
+    if (env.isProd) throw err
     console.error('[db] query failed, using seed fallback:', (err as Error).message)
     return fromSeed()
   }
@@ -141,7 +156,10 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | undefi
 
 /** Fetch one event by primary key (admin). */
 export async function getEventById(id: string): Promise<EventDetail | undefined> {
-  if (!db) return seedEvents.find((e) => e.id === id)
+  if (!db) {
+    if (env.isProd) throw new DatabaseUnavailableError()
+    return seedEvents.find((e) => e.id === id)
+  }
   const [row] = await db
     .select()
     .from(eventsTable)
@@ -151,7 +169,7 @@ export async function getEventById(id: string): Promise<EventDetail | undefined>
   return toEventDetail(row, await loadTicketTypes(row.id))
 }
 
-/** The featured event, or the first event, falling back to the seed. */
+/** The featured event, or the first event. Falls back to the seed in development. */
 export async function getFeaturedEvent(): Promise<EventDetail | undefined> {
   return safe(
     async () => {

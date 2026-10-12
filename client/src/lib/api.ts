@@ -85,25 +85,28 @@ export async function apiRequest<T>(
 }
 
 /**
- * Fetch the featured event. Falls back to the bundled seed while the API is
- * offline (development), so the site is always renderable.
+ * Fetch the featured event. In development it falls back to the bundled seed
+ * while the API is offline; in production a failure propagates so the UI can
+ * show an error instead of stale demo content.
  */
 export async function getFeaturedEvent(signal?: AbortSignal): Promise<EventDetail> {
   try {
     return await apiRequest<EventDetail>('/api/events/featured', { signal })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') throw err
-    return featuredEvent
+    if (import.meta.env.DEV) return featuredEvent
+    throw err
   }
 }
 
-/** List published events. Falls back to the seed event while offline. */
+/** List published events. Falls back to the seed event only in development. */
 export async function getEvents(signal?: AbortSignal): Promise<EventSummary[]> {
   try {
     return await apiRequest<EventSummary[]>('/api/events', { signal })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') throw err
-    return [featuredEvent]
+    if (import.meta.env.DEV) return [featuredEvent]
+    throw err
   }
 }
 
@@ -118,7 +121,7 @@ export async function getQuote(
   return apiRequest<Quote>('/api/quote', { method: 'POST', body: req, signal })
 }
 
-/** Fetch one event by slug. Falls back to the seed when the slug matches. */
+/** Fetch one event by slug. Falls back to the seed (development) if it matches. */
 export async function getEventBySlug(
   slug: string,
   signal?: AbortSignal,
@@ -127,7 +130,8 @@ export async function getEventBySlug(
     return await apiRequest<EventDetail>(`/api/events/${slug}`, { signal })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') throw err
-    return slug === featuredEvent.slug ? featuredEvent : null
+    if (import.meta.env.DEV) return slug === featuredEvent.slug ? featuredEvent : null
+    throw err
   }
 }
 

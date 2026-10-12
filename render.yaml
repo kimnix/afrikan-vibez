@@ -6,9 +6,12 @@
 # PostgreSQL database and the web service below, wires DATABASE_URL, runs
 # migrations during the build, and starts the API which also serves client/dist.
 #
-# Demo/admin accounts: SEED_DEMO_ACCOUNTS=true lets `npm run db:seed` create the
-# demo users even in production. Run it once from the service Shell after the
-# first deploy, then remove the variable if you no longer want demo accounts.
+# Demo data is production-guarded. For a client/demo deploy, run once from the
+# service Shell after the first deploy:
+#     SEED_DEMO_EVENT=true SEED_DEMO_ACCOUNTS=true npm run db:seed
+# (SEED_DEMO_ACCOUNTS is set below so the demo users are created.) For a real
+# launch, skip demo data entirely and create one admin with:
+#     ADMIN_EMAIL=you@yourdomain.com ADMIN_PASSWORD='…' npm run db:bootstrap-admin
 
 services:
   - type: web

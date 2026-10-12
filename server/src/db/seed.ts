@@ -11,6 +11,15 @@ if (!db) {
 const database = db
 
 async function seedEvents() {
+  const allowDemo =
+    process.env.SEED_DEMO_EVENT === 'true' || process.env.NODE_ENV !== 'production'
+  if (!allowDemo) {
+    console.log(
+      'Skipping demo event & promos in production (set SEED_DEMO_EVENT=true to load them).',
+    )
+    return
+  }
+
   const eventRow = {
     id: featuredEvent.id,
     slug: featuredEvent.slug,

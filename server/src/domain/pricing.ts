@@ -1,4 +1,3 @@
-import { promos as seedPromos } from './eventSeed.js'
 import type {
   EventDetail,
   Promo,
@@ -68,7 +67,7 @@ export function computeQuote(
   event: EventDetail,
   ticket: TicketType,
   req: QuoteRequest,
-  promos: Promo[] = seedPromos,
+  promos: Promo[],
 ): Quote {
   if (!Number.isInteger(req.quantity) || req.quantity < 1 || req.quantity > MAX_QUANTITY) {
     throw new PricingError(400, `Quantity must be a whole number between 1 and ${MAX_QUANTITY}.`)
