@@ -1,0 +1,27 @@
+{
+  "name": "african-vibes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AFRICAN VIBES — event discovery, ticketing and management platform",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c yellow,magenta \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm --workspace server run dev",
+    "dev:client": "npm --workspace client run dev",
+    "build": "npm --workspace server run build && npm --workspace client run build",
+    "start": "npm --workspace server run start",
+    "typecheck": "npm --workspace server run typecheck && npm --workspace client run typecheck",
+    "db:generate": "npm --workspace server run db:generate",
+    "db:migrate": "npm --workspace server run db:migrate",
+    "db:seed": "npm --workspace server run db:seed"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

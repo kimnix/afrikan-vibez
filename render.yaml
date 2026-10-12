@@ -1,0 +1,66 @@
+# Render Blueprint — AFRICAN VIBES (single-origin: API serves the built SPA).
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy: push this repo to GitHub/GitLab, then in Render choose
+# "New +" → "Blueprint" and point it at the repository. Render creates the
+# PostgreSQL database and the web service below, wires DATABASE_URL, runs
+# migrations during the build, and starts the API which also serves client/dist.
+#
+# Demo/admin accounts: SEED_DEMO_ACCOUNTS=true lets `npm run db:seed` create the
+# demo users even in production. Run it once from the service Shell after the
+# first deploy, then remove the variable if you no longer want demo accounts.
+
+services:
+  - type: web
+    name: african-vibes
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeployTrigger: commit
+    # Install workspaces (including dev deps: tsc, drizzle-kit, tsx),
+    # type-check/build both apps, then apply migrations.
+    buildCommand: npm install --include=dev && npm run build && npm run db:migrate
+    # Run from ./server so the API finds ../client/dist and ./uploads.
+    startCommand: cd server && node dist/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVE_CLIENT
+        value: "true"
+      - key: TRUST_PROXY
+        value: "true"
+      - key: PAYMENTS_MODE
+        value: mock
+      - key: SEED_DEMO_ACCOUNTS
+        value: "true"
+      - key: DEFAULT_CURRENCY
+        value: gbp
+      - key: DEFAULT_TIMEZONE
+        value: Europe/London
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: african-vibes-db
+          property: connectionString
+      # BASE_URL and CLIENT_ORIGIN are derived from Render's RENDER_EXTERNAL_URL
+      # automatically, so no manual wiring is needed for the default *.onrender.com
+      # domain. Set them explicitly if you attach a custom domain.
+    # Persist uploaded gallery images across deploys (requires a paid instance
+    # type, since free services cannot mount disks). Uncomment to enable:
+    # disk:
+    #   name: uploads
+    #   mountPath: /var/data
+    #   sizeGB: 1
+    # and add:
+    #   - key: UPLOAD_DIR
+    #     value: /var/data/uploads
+
+databases:
+  - name: african-vibes-db
+    plan: free
+    region: frankfurt

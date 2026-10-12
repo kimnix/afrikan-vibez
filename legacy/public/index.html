@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#080a0f"><title>DL Events | Tickets</title><link rel="stylesheet" href="/style.css"></head>
+<body><main class="wrap">
+<header class="nav"><div class="brand">DL<span>™</span> EVENTS</div><span class="tag">CULTURE · MUSIC · COMMUNITY</span></header>
+<section class="hero"><p class="eyebrow">THE FIRST RELEASE · 2027</p><h1>ONE PEOPLE.<br><em>ONE EXPERIENCE.</em></h1><p class="lead">Football, African culture, food and a night party. Bring your crew and choose your experience.</p><div class="pills"><span>⚽ Football & culture</span><span>🎶 Night party</span><span>👥 Group offers</span></div><a class="button" href="#tickets">Choose your ticket ↓</a><p class="note">Prototype only — confirm event date, venue, final pricing and capacity before launch.</p></section>
+<section id="tickets"><div class="section-head"><h2>Choose your experience</h2><small>Demo prices · GBP</small></div><div class="cards">
+<article class="glass"><p class="eyebrow">SOLO / FLEXIBLE</p><h3>Standard</h3><p class="price">£25 <small>/ person</small></p><p class="desc">Event entry for one person.</p><button class="button alt" data-type="standard">Choose Standard</button></article>
+<article class="glass featured"><p class="eyebrow">BRING YOUR CREW</p><h3>Group of 4</h3><p class="price">£90 <small>/ package</small></p><p class="desc">Four admissions. £22.50 per person.</p><button class="button" data-type="group4">Choose Group 4</button></article>
+<article class="glass"><p class="eyebrow">PREMIUM EXPERIENCE</p><h3>VIP</h3><p class="price">£75 <small>/ person</small></p><p class="desc">VIP access, subject to final venue inclusions.</p><button class="button alt" data-type="vip">Choose VIP</button></article>
+<article class="glass"><p class="eyebrow">LUXURY GROUP</p><h3>Exclusive 10</h3><p class="price">£500 <small>/ package</small></p><p class="desc">Premium group package. Final benefits to be confirmed.</p><button class="button alt" data-type="exclusive10">Enquire / choose</button></article>
+</div></section>
+<section class="glass checkout" id="checkout"><h2>Secure checkout</h2><p class="muted">You'll pay on Stripe's hosted checkout page. This demo uses test-mode prices only until you configure your account.</p>
+<label>Selected package<select id="ticketType"><option value="standard">Standard — £25</option><option value="group4">Group of 4 — £90</option><option value="vip">VIP — £75</option><option value="exclusive10">Exclusive 10 — £500</option></select></label>
+<label>Number of packages<input id="quantity" type="number" min="1" max="10" value="1"></label>
+<label>Email for confirmation (optional)<input id="email" type="email" maxlength="254" placeholder="you@example.com" autocomplete="email"></label>
+<button class="button" id="pay">Continue to secure payment</button><p id="message" class="notice" role="status"></p></section>
+<section class="glass checkout"><h2>Organiser payout setup</h2><p class="muted">Organisers should enter bank/payout details only on Stripe's secure hosted onboarding page — never into this website.</p><a class="button alt" href="/organiser.html">Set up organiser payouts</a></section>
+<footer>DL™ Events · Secure-payment starter. No real ticket is issued by this prototype. <a href="/security.html">Security notes</a></footer>
+</main><script src="/app.js" defer></script></body></html>

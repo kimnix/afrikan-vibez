@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><title>Organiser payout setup</title></head><body><main class="wrap"><header class="nav"><div class="brand">DL<span>™</span> EVENTS</div></header><section class="glass checkout"><p class="eyebrow">ORGANISER SETUP</p><h1>Secure your payouts.</h1><p class="lead">Continue to Stripe-hosted onboarding to provide the details Stripe requires for payouts. DL Events should not collect your bank login, card PIN or online-banking password.</p><button class="button" id="onboard">Continue to Stripe</button><p id="status" class="notice" role="status"></p><a href="/">Back to tickets</a></section><script>
+document.getElementById("onboard").addEventListener("click",async()=>{
+ const s=document.getElementById("status");s.textContent="Creating secure onboarding link…";
+ try{const r=await fetch("/api/connect/onboarding-link",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const d=await r.json();if(!r.ok)throw new Error(d.error||"Could not create link");s.textContent="Opening Stripe…";window.location.assign(d.url)}
+ catch(e){s.textContent=e.message}
+});
+</script></main></body></html>

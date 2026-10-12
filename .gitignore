@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+
+# Local development PostgreSQL data directory and logs
+.pgdata/
+
+# Locally uploaded gallery media
+server/uploads/
