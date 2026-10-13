@@ -6,11 +6,10 @@
 # PostgreSQL database and the web service below, wires DATABASE_URL, runs
 # migrations during the build, and starts the API which also serves client/dist.
 #
-# Demo data is production-guarded. For a client/demo deploy, run once from the
-# service Shell after the first deploy:
-#     SEED_DEMO_EVENT=true SEED_DEMO_ACCOUNTS=true npm run db:seed
-# (SEED_DEMO_ACCOUNTS is set below so the demo users are created.) For a real
-# launch, skip demo data entirely and create one admin with:
+# Demo data is production-guarded. This blueprint seeds the demo event, promos
+# and demo accounts during the build (idempotent upsert) so a fresh database
+# always has content for a client/demo deploy. For a real launch, drop the seed
+# step from buildCommand and create one admin instead:
 #     ADMIN_EMAIL=you@yourdomain.com ADMIN_PASSWORD='…' npm run db:bootstrap-admin
 
 services:
@@ -22,8 +21,9 @@ services:
     branch: main
     autoDeployTrigger: commit
     # Install workspaces (including dev deps: tsc, drizzle-kit, tsx),
-    # type-check/build both apps, then apply migrations.
-    buildCommand: npm install --include=dev && npm run build && npm run db:migrate
+    # type-check/build both apps, apply migrations, then seed the demo content
+    # (SEED_DEMO_EVENT / SEED_DEMO_ACCOUNTS let the seed run in production).
+    buildCommand: npm install --include=dev && npm run build && npm run db:migrate && SEED_DEMO_EVENT=true SEED_DEMO_ACCOUNTS=true npm run db:seed
     # Run from ./server so the API finds ../client/dist and ./uploads.
     startCommand: cd server && node dist/index.js
     healthCheckPath: /api/health

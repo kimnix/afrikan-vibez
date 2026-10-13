@@ -31,6 +31,21 @@ import type {
 
 const API_BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '')
 
+/** How long to wait for the public event content before giving up. */
+const EVENT_REQUEST_TIMEOUT_MS = 10_000
+
+/**
+ * Abort a request if the caller's signal fires (e.g. component unmount) or if it
+ * does not settle within `ms`, so the UI never hangs on an unresponsive API.
+ */
+function withTimeout(
+  signal: AbortSignal | undefined,
+  ms = EVENT_REQUEST_TIMEOUT_MS,
+): AbortSignal {
+  const timeout = AbortSignal.timeout(ms)
+  return signal ? AbortSignal.any([signal, timeout]) : timeout
+}
+
 export class ApiError extends Error {
   status: number
   constructor(message: string, status: number) {
@@ -91,7 +106,9 @@ export async function apiRequest<T>(
  */
 export async function getFeaturedEvent(signal?: AbortSignal): Promise<EventDetail> {
   try {
-    return await apiRequest<EventDetail>('/api/events/featured', { signal })
+    return await apiRequest<EventDetail>('/api/events/featured', {
+      signal: withTimeout(signal),
+    })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') throw err
     if (import.meta.env.DEV) return featuredEvent
@@ -102,7 +119,7 @@ export async function getFeaturedEvent(signal?: AbortSignal): Promise<EventDetai
 /** List published events. Falls back to the seed event only in development. */
 export async function getEvents(signal?: AbortSignal): Promise<EventSummary[]> {
   try {
-    return await apiRequest<EventSummary[]>('/api/events', { signal })
+    return await apiRequest<EventSummary[]>('/api/events', { signal: withTimeout(signal) })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') throw err
     if (import.meta.env.DEV) return [featuredEvent]
@@ -127,7 +144,7 @@ export async function getEventBySlug(
   signal?: AbortSignal,
 ): Promise<EventDetail | null> {
   try {
-    return await apiRequest<EventDetail>(`/api/events/${slug}`, { signal })
+    return await apiRequest<EventDetail>(`/api/events/${slug}`, { signal: withTimeout(signal) })
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') throw err
     if (import.meta.env.DEV) return slug === featuredEvent.slug ? featuredEvent : null
