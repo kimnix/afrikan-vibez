@@ -59,6 +59,28 @@ export const env = {
  * JWT secrets, no database, localhost origins) into a loud failure instead of a
  * silently insecure deployment.
  */
+export function isAllowedOrigin(origin: string | undefined): boolean {
+  if (!origin) return true
+
+  try {
+    const url = new URL(origin)
+    const host = url.hostname
+    const configured = new URL(env.clientOrigin)
+
+    if (origin === env.clientOrigin) return true
+    if (url.origin === configured.origin) return true
+
+    if (!env.isProd) {
+      const localhostHosts = new Set(['localhost', '127.0.0.1', '[::1]', '::1'])
+      if (localhostHosts.has(host)) return true
+    }
+
+    return false
+  } catch {
+    return false
+  }
+}
+
 export function assertProductionConfig(): void {
   if (!env.isProd) return
   const problems: string[] = []

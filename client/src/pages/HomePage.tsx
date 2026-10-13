@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
+import { AboutSection } from '../components/home/AboutSection'
 import { CategoryGrid } from '../components/home/CategoryGrid'
-import { EventHighlights } from '../components/home/EventHighlights'
 import { Hero } from '../components/home/Hero'
 import { Newsletter } from '../components/home/Newsletter'
-import { WhyAttend } from '../components/home/WhyAttend'
+import { TicketPricing } from '../components/home/TicketPricing'
 import { Button } from '../components/ui/Button'
 import { Section } from '../components/ui/Section'
-import { SectionHeading } from '../components/ui/SectionHeading'
 import { getFeaturedEvent } from '../lib/api'
 import type { EventDetail } from '../types'
 
@@ -56,29 +55,52 @@ export function HomePage() {
   }
 
   return (
-    <>
+    <div className="av-landing">
+      <div className="av-grain" aria-hidden="true" />
+      <div className="av-blob av-blob--amber" aria-hidden="true" />
+      <div className="av-blob av-blob--teal" aria-hidden="true" />
+
       <Hero event={event} />
 
-      <Section id="categories">
-        <SectionHeading
-          eyebrow="Four worlds, one night"
-          title="What's on"
-        />
+      <Section id="experience">
+        <div className="mb-8">
+          <p className="av-eyebrow">
+            <span className="av-dot" />
+            Four worlds, one night
+          </p>
+          <h2 className="av-display mt-4 text-[clamp(32px,4vw,52px)] text-cream">
+            The full experience
+          </h2>
+        </div>
         <CategoryGrid categories={event.categories} />
       </Section>
 
-      <Section id="highlights">
-        <SectionHeading eyebrow="Event highlights" title="The full experience" />
-        <EventHighlights highlights={event.highlights} />
+      <Section id="tickets">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="av-eyebrow">
+              <span className="av-dot" />
+              Choose your access
+            </p>
+            <h2 className="av-display mt-4 text-[clamp(32px,4vw,52px)] text-cream">
+              Tickets &amp; pricing
+            </h2>
+          </div>
+          <p className="max-w-sm text-sm leading-[1.8] text-ash">
+            Every ticket includes a personal QR code. Group and VIP options add
+            priority entry and dedicated hosts.
+          </p>
+        </div>
+        <TicketPricing event={event} />
       </Section>
 
-      <Section id="why-attend">
-        <WhyAttend reasons={event.whyAttend} />
+      <Section id="about">
+        <AboutSection event={event} />
       </Section>
 
       <Section id="newsletter">
         <Newsletter />
       </Section>
-    </>
+    </div>
   )
 }

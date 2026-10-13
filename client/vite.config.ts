@@ -40,9 +40,16 @@ export default defineConfig({
     }),
   ],
   server: {
+    host: 'localhost',
     port: 5173,
+    strictPort: true,
     proxy: {
       '/api': { target: API_TARGET, changeOrigin: true },
     },
+  },
+  preview: {
+    host: 'localhost',
+    port: 4173,
+    strictPort: true,
   },
 })

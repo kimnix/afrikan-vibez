@@ -9,7 +9,7 @@ import { rateLimit } from 'express-rate-limit'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import helmet from 'helmet'
-import { assertProductionConfig, env } from './env.js'
+import { assertProductionConfig, env, isAllowedOrigin } from './env.js'
 import { adminRouter } from './modules/admin.routes.js'
 import { authRouter } from './modules/auth.routes.js'
 import { bookingsRouter } from './modules/bookings.routes.js'
@@ -51,7 +51,13 @@ app.use(
 )
 app.use(
   cors({
-    origin: env.clientOrigin,
+    origin(origin, callback) {
+      if (!origin || isAllowedOrigin(origin)) {
+        callback(null, true)
+        return
+      }
+      callback(null, false)
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Authorization', 'Content-Type'],

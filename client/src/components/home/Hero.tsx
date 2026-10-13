@@ -3,14 +3,13 @@ import {
   formatEventDate,
   formatEventTime,
   formatMoney,
+  formatShortDate,
   timezoneLabel,
 } from '../../lib/format'
 import type { EventDetail } from '../../types'
-import { Badge } from '../ui/Badge'
-import { Button } from '../ui/Button'
-import { Container } from '../ui/Container'
 import { Countdown } from '../ui/Countdown'
 import { Icon } from '../ui/Icon'
+import { AfrofuturistFigure } from './AfrofuturistFigure'
 
 export function Hero({ event }: { event: EventDetail }) {
   const avail = availability(event)
@@ -18,17 +17,15 @@ export function Hero({ event }: { event: EventDetail }) {
   const words = event.headline.split(' ')
 
   return (
-    <section className="relative overflow-hidden pt-12 pb-16 sm:pt-16 lg:pt-24">
-      <div
-        aria-hidden="true"
-        className="kente pointer-events-none absolute inset-0 opacity-40"
-      />
-      <Container className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+    <section className="relative pt-10 pb-16 sm:pt-14 lg:pt-20">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-14 px-5 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8">
         <div className="animate-float-in">
-          <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-gold">
+          <p className="av-eyebrow">
+            <span className="av-dot" />
             {event.tagline}
           </p>
-          <h1 className="font-display text-4xl font-extrabold uppercase leading-[0.98] text-cream sm:text-5xl lg:text-6xl">
+
+          <h1 className="av-display mt-5 text-[clamp(52px,6.6vw,88px)] text-cream">
             {words.map((word, i) => (
               <span
                 key={`${word}-${i}`}
@@ -38,11 +35,12 @@ export function Hero({ event }: { event: EventDetail }) {
               </span>
             ))}
           </h1>
-          <p className="mt-6 max-w-xl text-base text-subtle sm:text-lg">
+
+          <p className="mt-6 max-w-xl text-[15px] leading-[1.9] text-ash">
             {event.summary}
           </p>
 
-          <dl className="mt-8 grid gap-3 text-sm sm:grid-cols-2">
+          <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-sm">
             <div className="flex items-start gap-3">
               <Icon name="calendar" className="mt-0.5 h-5 w-5 text-gold" />
               <div>
@@ -68,73 +66,53 @@ export function Hero({ event }: { event: EventDetail }) {
             </div>
           </dl>
 
-          <div className="mt-6">
-            <Badge tone={avail.tone === 'neutral' ? 'neutral' : avail.tone}>
-              {avail.label}
-            </Badge>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button to="/tickets" size="lg">
-              <Icon name="ticket" className="h-5 w-5" />
-              Get Your Ticket
-            </Button>
-            <Button to="/tickets?type=group" variant="glass" size="lg">
-              <Icon name="users" className="h-5 w-5" />
-              Bring a Group
-            </Button>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <a
+              href="#tickets"
+              className="button-primary inline-flex items-center justify-center gap-2 rounded-pill px-6 py-3.5 text-sm font-semibold text-ink transition duration-200 hover:-translate-y-0.5"
+            >
+              <Icon name="ticket" className="h-4 w-4" />
+              Get your ticket
+            </a>
+            <a
+              href="#experience"
+              className="glass inline-flex items-center justify-center gap-2 rounded-pill px-6 py-3.5 text-sm font-semibold text-cream transition duration-200 hover:-translate-y-0.5"
+            >
+              Explore the experience
+              <Icon name="arrowDown" className="h-4 w-4" />
+            </a>
           </div>
 
           <div className="mt-10">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-ash">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[2px] text-ash">
               {avail.soldOut ? 'Event status' : 'Event starts in'}
             </p>
             <Countdown startAt={event.startAt} endAt={event.endAt} />
+            <p className="mt-4 inline-flex items-center gap-2 text-xs text-sage">
+              <span className="av-dot" />
+              {avail.label}
+            </p>
           </div>
         </div>
 
         <div className="animate-float-in">
-          <div className="glass-strong rounded-card overflow-hidden">
-            <div className="photo relative aspect-[4/5] sm:aspect-[5/6]">
-              <div
-                aria-hidden="true"
-                className="kente absolute inset-0 opacity-60"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
-              <div className="absolute inset-0 flex flex-col justify-between p-6">
-                <Badge tone="gold" className="self-start">
-                  <Icon name="sparkle" className="h-3.5 w-3.5" />
-                  Featured Event
-                </Badge>
-                <div>
-                  <p className="font-display text-3xl font-extrabold uppercase leading-none text-cream">
-                    {event.name}
-                  </p>
-                  <p className="mt-2 text-sm text-subtle">{event.tagline}</p>
-                  <div className="mt-4 flex items-end justify-between">
-                    <span className="text-sm text-ash">
-                      {formatEventDate(event.startAt, event.timezone).replace(
-                        /^\w+ /,
-                        '',
-                      )}
-                    </span>
-                    {price !== null && (
-                      <span className="text-right">
-                        <span className="block text-[10px] uppercase tracking-widest text-ash">
-                          From
-                        </span>
-                        <span className="gold-text font-display text-2xl font-extrabold">
-                          {formatMoney(price, event.currency)}
-                        </span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AfrofuturistFigure
+            chips={
+              <>
+                <span className="av-chip av-chip--one">
+                  <span className="av-chip__dot" />
+                  {formatShortDate(event.startAt, event.timezone)} · {event.venue.city}
+                </span>
+                <span className="av-chip av-chip--two">
+                  {price !== null
+                    ? `From ${formatMoney(price, event.currency)}`
+                    : 'Tickets on sale'}
+                </span>
+              </>
+            }
+          />
         </div>
-      </Container>
+      </div>
     </section>
   )
 }

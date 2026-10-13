@@ -15,8 +15,8 @@ function DesktopLink({ to, label }: { to: string; label: string }) {
       end={to === '/'}
       className={({ isActive }) =>
         cn(
-          'relative rounded-lg px-3 py-2 text-sm font-medium transition',
-          isActive ? 'text-gold-bright' : 'text-cream/80 hover:text-cream',
+          'relative rounded-lg px-3 py-2 text-xs font-medium tracking-wide transition duration-200',
+          isActive ? 'text-gold-bright' : 'text-cream/75 hover:text-cream',
         )
       }
     >
@@ -86,15 +86,18 @@ export function Navbar() {
         <div className="hidden items-center gap-2 lg:flex">
           <Link
             to="/my-tickets"
-            className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-cream/80 transition hover:text-cream"
+            className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-cream/75 transition hover:text-cream"
           >
             <Icon name="ticket" className="h-4 w-4" />
             My Tickets
           </Link>
-          <Button to="/account" size="sm">
+          <Link
+            to="/account"
+            className="inline-flex items-center gap-2 rounded-pill border border-gold/45 bg-gold/10 px-4 py-2 text-xs font-semibold text-gold-bright transition duration-200 hover:bg-gold/20"
+          >
             <Icon name="user" className="h-4 w-4" />
             {accountLabel}
-          </Button>
+          </Link>
         </div>
 
         <button

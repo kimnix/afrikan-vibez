@@ -1,24 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-ink: #080a0f;
-  --color-midnight: #0b1220;
-  --color-charcoal: #12151c;
+  --color-ink: #080a10;
+  --color-midnight: #0b0f18;
+  --color-charcoal: #11151e;
   --color-slate-deep: #1a1f2b;
-  --color-gold: #e7c36a;
-  --color-gold-bright: #f8dfa0;
-  --color-amber: #d6a63d;
-  --color-cream: #f8f6f0;
-  --color-ash: #a7a7a7;
-  --color-subtle: #c6c4bd;
+  --color-gold: #f1c66b;
+  --color-gold-bright: #ffe4a2;
+  --color-amber: #d6a34b;
+  --color-gold-deep: #a16d27;
+  --color-sage: #b8db91;
+  --color-teal: #164f48;
+  --color-rust: #b5532f;
+  --color-cream: #f6f4ef;
+  --color-ash: #a5a8b2;
+  --color-subtle: #c9cbd3;
 
-  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  --radius-card: 1.25rem;
+  --radius-card: 1.5rem;
   --radius-pill: 999px;
 
-  --shadow-glow: 0 20px 60px -20px rgba(231, 195, 106, 0.45);
+  --shadow-glow: 0 20px 60px -20px rgba(241, 198, 107, 0.45);
 }
 
 @layer base {
@@ -28,6 +32,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 95px;
   }
 
   body {
@@ -37,9 +42,9 @@
     color: var(--color-cream);
     background-color: var(--color-ink);
     background-image:
-      radial-gradient(ellipse 60% 50% at 8% 0%, rgba(32, 50, 70, 0.9) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 45% at 95% 30%, rgba(56, 39, 26, 0.85) 0%, transparent 55%),
-      radial-gradient(ellipse 70% 60% at 50% 110%, rgba(20, 30, 48, 0.8) 0%, transparent 60%);
+      radial-gradient(38rem 38rem at 92% -6%, rgba(161, 109, 39, 0.2), transparent 70%),
+      radial-gradient(34rem 34rem at -8% 52%, rgba(22, 79, 72, 0.22), transparent 72%),
+      radial-gradient(ellipse 70% 60% at 50% 115%, rgba(20, 30, 48, 0.75), transparent 62%);
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -67,34 +72,46 @@
 
 @layer components {
   .glass {
-    background: rgba(255, 255, 255, 0.065);
-    backdrop-filter: blur(22px) saturate(145%);
-    -webkit-backdrop-filter: blur(22px) saturate(145%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.018)
+    );
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 12px 35px rgba(0, 0, 0, 0.35);
+      inset 0 1px 0 rgba(255, 255, 255, 0.075),
+      0 18px 55px rgba(0, 0, 0, 0.18);
   }
 
   .glass-strong {
-    background: rgba(18, 21, 28, 0.72);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.085),
+      rgba(255, 255, 255, 0.02)
+    );
     backdrop-filter: blur(26px) saturate(150%);
     -webkit-backdrop-filter: blur(26px) saturate(150%);
-    border: 1px solid rgba(231, 195, 106, 0.22);
+    border: 1px solid rgba(241, 198, 107, 0.24);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 18px 50px rgba(0, 0, 0, 0.45);
+      0 18px 55px rgba(0, 0, 0, 0.28);
   }
 
   .gold-text {
-    background: linear-gradient(135deg, #f8dfa0 0%, #e7c36a 45%, #d6a63d 100%);
+    background: linear-gradient(135deg, #ffe4a2 0%, #f1c66b 45%, #d6a34b 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .gold-rule {
-    background: linear-gradient(90deg, transparent, rgba(231, 195, 106, 0.7), transparent);
+    background: linear-gradient(90deg, transparent, rgba(241, 198, 107, 0.7), transparent);
+  }
+
+  .button-primary {
+    background: linear-gradient(135deg, #fff0bd 0%, #f1c66b 45%, #d6a34b 100%);
   }
 
   .photo {
@@ -133,5 +150,12 @@
   }
   .animate-float-in {
     animation: none;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-strong {
+    background: #11151e;
   }
 }

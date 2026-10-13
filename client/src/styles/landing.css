@@ -1,0 +1,291 @@
+/*
+ * Landing experience — "Obsidian Glass × Champagne Gold" Afrofuturist art
+ * direction. Scoped under `.av-landing` so the rest of the app is untouched.
+ */
+
+.av-landing {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* Ambient light blobs -------------------------------------------------- */
+.av-blob {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.17;
+  pointer-events: none;
+}
+.av-blob--amber {
+  width: 440px;
+  height: 440px;
+  top: -90px;
+  right: -70px;
+  background: #a16d27;
+}
+.av-blob--teal {
+  width: 420px;
+  height: 420px;
+  top: 44%;
+  left: -130px;
+  background: #164f48;
+}
+
+/* Film grain ------------------------------------------------------------ */
+.av-grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.14;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.6) 0.5px, transparent 0.6px);
+  background-size: 5px 5px;
+}
+
+/* Eyebrow label --------------------------------------------------------- */
+.av-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2.3px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.av-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-sage);
+  animation: av-pulse 2.4s ease-out infinite;
+}
+@keyframes av-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(184, 219, 145, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(184, 219, 145, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(184, 219, 145, 0);
+  }
+}
+
+/* Display headline ------------------------------------------------------ */
+.av-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+}
+
+/* Hero artwork ---------------------------------------------------------- */
+.av-figure {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+  aspect-ratio: 4 / 5;
+}
+.av-figure__sun {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  width: 62%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 34%,
+    #ffe4a2 0%,
+    #f1c66b 28%,
+    #b5532f 66%,
+    #4a2413 100%
+  );
+  box-shadow: 0 0 90px rgba(241, 198, 107, 0.35);
+}
+.av-figure__orbit {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: 92%;
+  aspect-ratio: 1.9 / 1;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  border: 1px solid rgba(241, 198, 107, 0.35);
+  border-radius: 50%;
+}
+.av-figure__orbit--two {
+  width: 112%;
+  transform: translate(-50%, -50%) rotate(12deg);
+  border-color: rgba(184, 219, 145, 0.22);
+}
+.av-figure__ribbon {
+  position: absolute;
+  width: 130%;
+  height: 34%;
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.5;
+}
+.av-figure__ribbon--gold {
+  top: 6%;
+  left: -14%;
+  transform: rotate(-22deg);
+  background: linear-gradient(
+    120deg,
+    rgba(241, 198, 107, 0) 0%,
+    rgba(241, 198, 107, 0.5) 50%,
+    rgba(181, 83, 47, 0) 100%
+  );
+}
+.av-figure__ribbon--teal {
+  bottom: 4%;
+  right: -14%;
+  transform: rotate(16deg);
+  background: linear-gradient(
+    120deg,
+    rgba(22, 79, 72, 0) 0%,
+    rgba(22, 79, 72, 0.55) 50%,
+    rgba(184, 219, 145, 0) 100%
+  );
+}
+
+.av-person {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 2;
+  width: 58%;
+  transform: translateX(-50%);
+}
+.av-person__body {
+  height: 200px;
+  border-radius: 46% 46% 14px 14px / 34% 34% 12px 12px;
+  background: linear-gradient(180deg, #1c2130 0%, #0a0d14 72%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.av-person__head {
+  position: absolute;
+  left: 50%;
+  top: -30px;
+  width: 52%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 48% 48% 44% 44%;
+  background: linear-gradient(180deg, #3a2a20 0%, #241812 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+.av-headwrap {
+  position: absolute;
+  left: 50%;
+  top: -26px;
+  z-index: 3;
+  width: 74%;
+  height: 62%;
+  transform: translateX(-50%);
+  border-radius: 52% 52% 32% 32%;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    135deg,
+    #f1c66b 0 10px,
+    #b5532f 10px 20px,
+    #2f5d3a 20px 30px,
+    #11151e 30px 40px
+  );
+  box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.55);
+}
+.av-kente {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  height: 26px;
+  opacity: 0.9;
+  background: repeating-linear-gradient(
+    90deg,
+    #f1c66b 0 12px,
+    #b5532f 12px 24px,
+    #2f5d3a 24px 36px,
+    #11151e 36px 48px
+  );
+}
+
+/* Floating glass chips on the artwork ---------------------------------- */
+.av-chip {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--color-cream);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.03)
+  );
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+.av-chip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-sage);
+}
+.av-chip--one {
+  top: 14%;
+  left: -8%;
+}
+.av-chip--two {
+  bottom: 16%;
+  right: -10%;
+}
+
+/* Ticket pricing -------------------------------------------------------- */
+.av-price-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.av-price-card--popular {
+  border-color: rgba(241, 198, 107, 0.6) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 24px 60px -24px rgba(241, 198, 107, 0.5) !important;
+}
+.av-price-card--popular::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #ffe4a2, rgba(241, 198, 107, 0.1));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-dot {
+    animation: none;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .av-chip {
+    background: #11151e;
+  }
+}
