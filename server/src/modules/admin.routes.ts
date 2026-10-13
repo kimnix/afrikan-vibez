@@ -138,6 +138,8 @@ export const adminRouter = Router()
 
 // Every admin route requires a signed-in user with the admin role. Scoped to
 // the /admin prefix so unknown API paths still reach the API 404 handler.
+// This is the real security boundary: the UI may hide routes, but the API never
+// allows a non-admin user to access administrative data or actions.
 adminRouter.use('/admin', requireAuth, requireRole('admin'))
 
 adminRouter.get('/admin/stats', async (_req, res) => {

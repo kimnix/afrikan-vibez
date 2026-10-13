@@ -1,9 +1,7 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { Button } from '../ui/Button'
 import { Container } from '../ui/Container'
-import { GlassCard } from '../ui/GlassCard'
-import { Icon } from '../ui/Icon'
 
 const links = [
   { label: 'Overview', to: '/admin', end: true },
@@ -31,24 +29,7 @@ export function AdminLayout() {
   }
 
   if (!user || user.role !== 'admin') {
-    return (
-      <Container className="py-16">
-        <GlassCard className="mx-auto max-w-lg p-8 text-center">
-          <Icon name="shield" className="mx-auto h-10 w-10 text-gold" />
-          <h1 className="mt-4 font-display text-2xl font-bold text-cream">
-            Admin access required
-          </h1>
-          <p className="mt-2 text-sm text-subtle">
-            {user
-              ? 'Your account does not have permission to view this area.'
-              : 'Sign in with an admin account to continue.'}
-          </p>
-          <div className="mt-6 flex justify-center gap-3">
-            <Button to={user ? '/' : '/account'}>{user ? 'Back home' : 'Sign in'}</Button>
-          </div>
-        </GlassCard>
-      </Container>
-    )
+    return <Navigate to={user ? '/' : '/account'} replace />
   }
 
   return (
